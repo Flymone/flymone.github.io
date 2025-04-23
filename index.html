@@ -1,115 +1,96 @@
-<!-- Der neue HTML Doctype ist der einfachste Doctype den es je gab.-->
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <!-- Auch das meta-Tag zum Zeichensatz wurde vereinfacht.-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-     
-    <style>
-        * {
-            color: #999999;
-            font-size: 20px;
-            font-weight: 400;
-            box-sizing: border-box;
-            font-family: 'Monteserat', Arial, sans-serif;
-        }
- 
-        header,
-        nav,
-        section,
-        aside,
-        footer {
-            text-align: center;
-            border-radius: 7px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,.08);
-        }
- 
-        header {
-            width: 26%;
-            margin: 25px 25px 25px 25px;
-            
-        }
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
-        .image {
-          width: 80px;
-          height: auto;
+export default function PortfolioLanding() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleAnchorClick = (e) => {
+      if (e.target.tagName === 'A' && e.target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const id = e.target.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(id);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          setMenuOpen(false);
         }
- 
-        nav {
-            width: calc(75% - 75px);
-            margin: -121px 25px 25px 0px;
-            float: right;
-            display: inline; /* li nebeneinander anzeigen */
-            list-style-type: none; /* ohne Aufzählungspunkte */
-        }
-        #navi {
-          display: inline;
-          list-style-type: none;
-        }
-        aside {
-            width: 25%;
-            float: left;
-            min-height: 517px;
-        }
- 
-        section {
-            float: left;
-            width: calc(75% - 75px);
-            margin: 0 25px 25px 25px;
-        }
- 
-        section header,
-        section article,
-        section footer {
-            width: 100%;
-            border-radius: 7px;
-            border: 1px solid #e5e5e5;
-            box-shadow: none;
-            margin: 25px 0px 0px 0px;
-            padding: 50px;
-        }
- 
-        footer {
-            width: 96.5%;
-            margin: 25px 25px 0px 25px;
-            clear: both;
-        }
-        
-    </style>
-</head>
-<body>
-<main>
-  <header>
-   <img class="image" src="image/simone-logo-png-transparent.png">
-  
-  </header>
- 
-  <nav>
-    <!-- Menü am besten als eine ul einfügen -->
-    <ul id="navi">
-      <li><a href="ich.html">Über mich</a></li>
-      <li><a href=""></a></li>
-      <li><a href=""></a></li>
-    </ul>
-  </nav>
- 
-  <section>
-    section <!-- Ein Abschnitt der Website -->
-    <header>section header</header> <!-- Du Überschrift des Website-Abschnitts -->
-    <article>section article</article> <!-- Der Inhalt des Website-Abschnitts -->
-    <footer>section footer</footer> <!-- Der Schlussteil des Website-Abschnitts -->
-  </section>
- 
-  <aside>
-    aside <!-- Eine Seitenleiste -->
-  </aside>
- 
-  <footer>
-    footer <!-- Der Fußbereich -->
-  </footer>
-</main>   
-</body>
-</html>
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => document.removeEventListener('click', handleAnchorClick);
+  }, []);
+
+  return (
+    <main className="min-h-screen bg-black text-white font-sans scroll-smooth">
+      {/* Navigation */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-black bg-opacity-70 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <span className="text-xl font-semibold text-white">Solida Simone</span>
+          <div className="md:hidden">
+            <button onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+          <nav className="hidden md:flex space-x-8 text-white">
+            <a href="#about" className="hover:text-blue-400 transition-colors">Über mich</a>
+            <a href="#skills" className="hover:text-blue-400 transition-colors">Skills</a>
+            <a href="#projects" className="hover:text-blue-400 transition-colors">Projekte</a>
+            <a href="#contact" className="hover:text-blue-400 transition-colors">Kontakt</a>
+          </nav>
+        </div>
+        {menuOpen && (
+          <nav className="md:hidden flex flex-col items-center space-y-4 mt-4 pb-4">
+            <a href="#about" className="hover:text-blue-400">Über mich</a>
+            <a href="#skills" className="hover:text-blue-400">Skills</a>
+            <a href="#projects" className="hover:text-blue-400">Projekte</a>
+            <a href="#contact" className="hover:text-blue-400">Kontakt</a>
+          </nav>
+        )}
+      </header>
+
+      {/* Hero Section */}
+      <section className="flex flex-col items-center justify-center h-screen text-center px-6 pt-24">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-4xl md:text-6xl font-bold mb-4"
+        >
+          Hallo, ich bin <span className="text-blue-400">Solida Simone</span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2 }}
+          className="text-lg md:text-xl text-gray-400 mb-8 max-w-xl"
+        >
+          Willkommen auf meinem Portfolio. Ich bin spezialisiert auf moderne Webentwicklung & Design mit Fokus auf Ästhetik und Funktionalität.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.4 }}
+        >
+          <Button className="bg-blue-500 hover:bg-blue-400 text-black px-6 py-3 text-lg rounded-2xl shadow-xl transition-all">
+            Mehr erfahren
+          </Button>
+        </motion.div>
+      </section>
+
+      {/* Über mich Section */}
+      <section id="about" className="py-24 px-6 bg-gradient-to-b from-black to-gray-900">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="text-3xl md:text-5xl font-semibold mb-10 text-ce
